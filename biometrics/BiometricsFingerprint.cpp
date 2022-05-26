@@ -59,6 +59,7 @@ static void set(const std::string& path, const T& value) {
 BiometricsFingerprint::BiometricsFingerprint() {
     biometrics_2_1_service = IBiometricsFingerprint_2_1::getService();
     xiaomiFingerprintService = IXiaomiFingerprint::getService();
+    touchFeatureService = ITouchFeature::getService();
 }
 
 Return<uint64_t> BiometricsFingerprint::setNotify(const sp<IBiometricsFingerprintClientCallback>& clientCallback) {
@@ -109,15 +110,14 @@ Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, floa
     set(FOD_STATUS_PATH, FOD_STATUS_ON);
     std::thread([this]() {
         std::this_thread::sleep_for(std::chrono::microseconds(10));
-        set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_ON);
+        touchFeatureService->setTouchMode(TOUCH_FOD_ENABLE, 1);
         xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_FOD);
     }).detach();
     return Void();
 }
 
 Return<void> BiometricsFingerprint::onFingerUp() {
-    set(FOD_STATUS_PATH, FOD_STATUS_OFF);
-    set(DISPPARAM_PATH, DISPPARAM_HBM_FOD_OFF);
+    touchFeatureService->resetTouchMode(TOUCH_FOD_ENABLE);
     xiaomiFingerprintService->extCmd(COMMAND_NIT, PARAM_NIT_NONE);
     return Void();
 }

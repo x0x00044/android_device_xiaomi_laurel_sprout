@@ -20,6 +20,7 @@
 #include <hidl/MQDescriptor.h>
 #include <hidl/Status.h>
 #include <vendor/xiaomi/hardware/fingerprintextension/1.0/IXiaomiFingerprint.h>
+#include <vendor/xiaomi/hardware/touchfeature/1.0/ITouchFeature.h>
 
 namespace android {
 namespace hardware {
@@ -39,6 +40,7 @@ using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::android::sp;
 using ::vendor::xiaomi::hardware::fingerprintextension::V1_0::IXiaomiFingerprint;
+using ::vendor::xiaomi::hardware::touchfeature::V1_0::ITouchFeature;
 
 struct BiometricsFingerprint : public IBiometricsFingerprint {
     BiometricsFingerprint();
@@ -62,6 +64,7 @@ struct BiometricsFingerprint : public IBiometricsFingerprint {
 private:
     sp<IBiometricsFingerprint_2_1> biometrics_2_1_service;
     sp<IXiaomiFingerprint> xiaomiFingerprintService;
+    sp<ITouchFeature> touchFeatureService;
 };
 
 }  // namespace implementation
